@@ -25,7 +25,7 @@ class DisplayController(object):
         image_dir = self._get_image_dir()
         return [x for x in os.listdir(image_dir) if x.endswith('.gif')]
 
-    def _get_default_font(self, size=24):
+    def _get_default_font(self, size=12):
         """Returns the default font"""
         return ImageFont.truetype("fonts/Roboto-Medium.ttf", size)
 
@@ -33,7 +33,7 @@ class DisplayController(object):
         """Configures display options"""
         self.options = RGBMatrixOptions()
         self.options.rows = 64
-        self.options.cols = 64
+        self.options.cols = 32
         self.options.chain_length = 1
         self.options.row_address_type = 0
         self.options.parallel = 1
@@ -131,13 +131,14 @@ class DisplayController(object):
         """Calculates the number of days until next xmas"""
         now = datetime.datetime.now()
         year = now.year
-        if now > datetime.datetime(year=year, month=12, day=25):
+        if now > datetime.datetime(year=year+1, month=1, day=1, hour=1):
             # Account for the days after xmas of the remaining year
             year = year + 1
-        delta = now - datetime.datetime(year=year, month=12, day=25)
-        return abs(int(delta.days))
+        delta = datetime.datetime(year=year+1, month=1, day=1, hour=1) - now
+        print(delta.seconds)
+        return abs(int(delta.seconds))
 
-    def _display_text(self, text, font_size=32):
+    def _display_text(self, text, font_size=12):
         """Puts text on the display"""
         image = self._get_blank_image()
         draw = ImageDraw.Draw(image)
@@ -150,13 +151,18 @@ class DisplayController(object):
 
     def display_days_until_xmas(self, duration=120):
         """Displays the number of days until xmas"""
-        days_until = self._calculate_days_to_xmas()
-        prefix_words = ['DAYS', 'UNTIL', 'XMAS']
-        for word in prefix_words:
-            self._display_text(word, 16)
-            time.sleep(0.8)
-        self._display_text(str(days_until))
-        time.sleep(duration)
+        #days_until = self._calculate_days_to_xmas()
+        #prefix_words = ['DAYS', 'UNTIL', 'NEW YEAR']
+        #for word in prefix_words:
+            #self._display_text(word, 16)
+            #time.sleep(0.8)
+        show = True
+        while show:
+            days_until = self._calculate_days_to_xmas()
+            self._display_text(str(days_until))
+            if days_until > 3000:
+                show = False
+        #time.sleep(duration)
 
     def run(self):
         logging.info('Starting application')
