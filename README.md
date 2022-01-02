@@ -1,4 +1,4 @@
-# Days Until Xmas Sign
-A sign that displays the number of days until xmas, as well as xmas-related gifs.
+# Seconds Until Some Date Sign
+A sign that displays the number of seconds until some date, as well as related gifs.
 
 ![Cover image](misc/cover.png)
